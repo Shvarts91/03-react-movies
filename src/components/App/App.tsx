@@ -7,13 +7,27 @@ import MovieGrid from "../MovieGrid/MovieGrid";
 import Loader from "../Loader/Loader";
 import ErrorMessage from "../ErrorMessage/ErrorMessage";
 import toast, { Toaster } from "react-hot-toast";
-
-// import css from "./App.css";
+import MovieModal from "../MovieModal/MovieModal";
 
 function App() {
   const [error, setError] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [movies, setMovies] = useState<Movie[]>([]);
+  const [isOpenModal, setIsOpenModal] = useState<boolean>(false);
+  const [movie, setMovie] = useState<Movie | null>(null);
+
+  const openModal = () => setIsOpenModal(true);
+
+  const closeModal = () => {
+    setIsOpenModal(false);
+    setMovie(null);
+  };
+
+  const getMovieById = (movie: Movie) => {
+    openModal();
+    setMovie(movie);
+  };
+
   const handleOrder = async (searchQuery: string) => {
     setIsLoading(true);
     setError(null);
@@ -42,7 +56,12 @@ function App() {
 
       {!isLoading && error && <ErrorMessage />}
 
-      {!isLoading && !error && <MovieGrid movies={movies} />}
+      {!isLoading && !error && (
+        <MovieGrid onClickMovie={getMovieById} movies={movies} />
+      )}
+      {isOpenModal && movie && (
+        <MovieModal movie={movie} onClose={closeModal} />
+      )}
       <Toaster position="top-center" reverseOrder={false} />
     </>
   );
