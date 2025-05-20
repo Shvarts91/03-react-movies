@@ -23,12 +23,12 @@ function App() {
     setMovie(null);
   };
 
-  const getMovieById = (movie: Movie) => {
+  const handleSelectMovie = (movie: Movie) => {
     openModal();
     setMovie(movie);
   };
 
-  const handleOrder = async (searchQuery: string) => {
+  const handleSearch = async (searchQuery: string) => {
     setIsLoading(true);
     setError(null);
     const { data, error } = await fetchMovies(searchQuery);
@@ -50,14 +50,14 @@ function App() {
 
   return (
     <>
-      <SearchBar onSubmit={handleOrder} />
+      <SearchBar onSubmit={handleSearch} />
 
       {isLoading && <Loader />}
 
       {!isLoading && error && <ErrorMessage />}
 
       {!isLoading && !error && (
-        <MovieGrid onClickMovie={getMovieById} movies={movies} />
+        <MovieGrid onSelect={handleSelectMovie} movies={movies} />
       )}
       {isOpenModal && movie && (
         <MovieModal movie={movie} onClose={closeModal} />

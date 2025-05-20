@@ -6,16 +6,23 @@ interface MovieResponse {
   error: string | null;
 }
 
+interface FetchMoviesHttpResponse {
+  results: Movie[];
+}
+
 async function fetchMovies(query: string): Promise<MovieResponse> {
   try {
-    const response = await axios("https://api.themoviedb.org/3/search/movie", {
-      params: {
-        query,
-      },
-      headers: {
-        Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
-      },
-    });
+    const response = await axios.get<FetchMoviesHttpResponse>(
+      "https://api.themoviedb.org/3/search/movie",
+      {
+        params: {
+          query,
+        },
+        headers: {
+          Authorization: `Bearer ${import.meta.env.VITE_TMDB_TOKEN}`,
+        },
+      }
+    );
     return { data: response.data.results, error: null };
   } catch (error) {
     let message = "Unknown error occurred.";
